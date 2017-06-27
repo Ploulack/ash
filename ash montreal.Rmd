@@ -1,0 +1,54 @@
+---
+title: "Data Product assignment"
+author: "Ploulack"
+date: "27/06/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+
+```{r message=FALSE}
+library(tidyverse)
+library(leaflet)
+library(tidyr)
+library(purrr)
+```
+
+## Introduction to the Ash borer problem
+in the 90s the ash borer was introduced in north america accidentally, probably through shipping containers.
+The invasion was detected in michigan in 2002.
+in the absence of parasite wasps, the insect's larvae kills all trees in an area.
+In urban environment where trees provide hold much higher value that in forest, pesticide injection in the tree is the only available answer.
+We provide map of Montreal's ash trees injected. Click on tree to get year of injection.
+
+## Getting the data
+
+Montreal public data repository hosts the file.
+
+```{r, message=FALSE, results='hide', warning=FALSE, cache=TRUE}
+p2016 <- "http://donnees.ville.montreal.qc.ca/dataset/ebb813dd-a93f-4fb0-8137-80492a30a1fa/resource/0a5984e4-752f-401e-b2d9-aa0567535d39/download/frenepublicinjection2016.csv"
+p2015 <- "http://donnees.ville.montreal.qc.ca/dataset/ebb813dd-a93f-4fb0-8137-80492a30a1fa/resource/a57f787f-bde9-4a59-88d1-4ae742edd9b8/download/frenepublicinjection2015.csv"
+p2014 <- "http://donnees.ville.montreal.qc.ca/dataset/ebb813dd-a93f-4fb0-8137-80492a30a1fa/resource/27a5c89f-6bd5-44ac-bbe9-8a0fdc9858f8/download/frenepublicinjection2014.csv"
+
+ash <- map_df(c(p2014,p2015,p2016), read_csv)
+```
+
+
+## Interactive map
+Zoom in to clear the clusters and click on any 'tree' to get the latest year of injection for pesticide treatment.
+
+```{r, fig.align='center',fig.asp= 2, out.width="100%",fig.cap= "Ash trees in Montreal treated against the ash borer"}
+ash %>%
+        select(latitude, longitude, Injections) %>%
+        mutate(Injections = as.character(Injections)) %>%
+        leaflet() %>%
+        addTiles() %>%
+        addMarkers(clusterOptions = markerClusterOptions(), popup = ~Injections ) %>%
+        setView(lat = 45.53889, lng = -73.67858 ,zoom = 12)
+```
+
+
+And this conludes our montreal report on the battle against the ash borer.
