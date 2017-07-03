@@ -15,6 +15,7 @@ library(tidyverse)
 library(leaflet)
 library(tidyr)
 library(purrr)
+library(plotly)
 ```
 
 ## Introduction to the Ash borer problem
@@ -36,6 +37,11 @@ p2014 <- "http://donnees.ville.montreal.qc.ca/dataset/ebb813dd-a93f-4fb0-8137-80
 ash <- map_df(c(p2014,p2015,p2016), read_csv)
 ```
 
+## Interactive plotly graph
+Plotly offers a quick way to interactively feel where are ash treated the most in Montreal.
+We use plotly's ability to convert from ggplot which we're familiar with.
+
+```‘
 
 ## Interactive map
 Zoom in to clear the clusters and click on any 'tree' to get the latest year of injection for pesticide treatment.
